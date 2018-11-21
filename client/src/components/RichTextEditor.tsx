@@ -13,6 +13,9 @@ import {
 
 import imageExtensions from 'image-extensions';
 import isUrl from 'is-url';
+import gql from 'graphql-tag';
+import { useMutation } from 'react-apollo-hooks';
+import Plain from 'slate-plain-serializer';
 interface SlateEditorValue {
   value: Value;
   [key: string]: any;
@@ -84,6 +87,14 @@ const onDropOrPaste = (event, editor, next) => {
 
   next();
 };
+
+const mutation = gql`
+  mutation PostCreate($data: PostInput) {
+    postCreate(data: $data) {
+      id
+    }
+  }
+`;
 const RichTextEditor = () => {
   const initialValue = Value.fromJSON({
     document: {
@@ -96,11 +107,25 @@ const RichTextEditor = () => {
     }
   });
 
+  const [loading, setLoading] = useState(false);
   const [hasSlateValue, setHasSlateValue] = useState(false);
   const [slateValue, setSlateValue] = useState(initialValue);
+  const sendMessage = useMutation(mutation);
 
   const handleSlateValue = ({ value }: SlateEditorValue) => {
     setSlateValue(value);
+  };
+
+  const handleButtonClick = async () => {
+    setLoading(true);
+    await sendMessage({
+      variables: {
+        data: {
+          body: Plain.serialize(slateValue)
+        }
+      }
+    });
+    setLoading(false);
   };
 
   useEffect(
@@ -126,7 +151,12 @@ const RichTextEditor = () => {
         />
       </CardContent>
       <CardActions>
-        <Button variant="outlined" style={{ width: '100%' }}>
+        <Button
+          variant="outlined"
+          style={{ width: '100%' }}
+          onClick={handleButtonClick}
+          disabled={loading}
+        >
           <h3> 📩 Send 🚀</h3>
         </Button>
       </CardActions>

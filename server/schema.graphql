@@ -1,10 +1,18 @@
+type User {
+  id: ID
+  name: String
+  email: String
+}
 type Post {
   id: ID
   body: String
+  user: User
 }
 
 type Mutation {
-  postAdd(data: PostInput): Post
+  postCreate(data: PostInput): Post
+  postUpdate(id: ID, data: PostInput): Post
+  postDelete(id: ID): Post
 }
 
 input PostInput {
