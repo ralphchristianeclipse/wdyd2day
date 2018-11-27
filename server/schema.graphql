@@ -1,3 +1,8 @@
+enum SubscriptionType {
+  CREATED
+  UPDATED
+  REMOVED
+}
 type User {
   id: ID
   name: String
@@ -9,10 +14,9 @@ type Post {
   user: User
 }
 
-type Mutation {
-  postCreate(data: PostInput): Post
-  postUpdate(id: ID, data: PostInput): Post
-  postDelete(id: ID): Post
+type PostSubscription {
+  mutation: SubscriptionType
+  data: Post
 }
 
 input PostInput {
@@ -21,4 +25,14 @@ input PostInput {
 
 type Query {
   posts: [Post]
+}
+
+type Mutation {
+  postCreate(data: PostInput): Post
+  postUpdate(id: ID, data: PostInput): Post
+  postRemove(id: ID): Post
+}
+
+type Subscription {
+  post: PostSubscription
 }

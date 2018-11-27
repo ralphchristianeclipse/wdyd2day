@@ -20,9 +20,9 @@ const Posts = () => {
   if (loading) return <h1> Loading... </h1>;
   const { posts } = data;
   return (
-    <Grid container style={{ margin: '10px' }}>
+    <Grid container style={{ margin: '10px' }} justify="center">
       {posts.map(post => (
-        <Grid key={post.id} item justify="center">
+        <Grid key={post.id} item>
           <Card>
             <CardHeader
               title={
