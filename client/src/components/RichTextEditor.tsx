@@ -92,6 +92,24 @@ const mutation = gql`
   mutation PostCreate($data: PostInput) {
     postCreate(data: $data) {
       id
+      body
+      user {
+        id
+        name
+      }
+    }
+  }
+`;
+
+const PostsQuery = gql`
+  query Posts {
+    posts {
+      id
+      body
+      user {
+        id
+        name
+      }
     }
   }
 `;
@@ -110,7 +128,17 @@ const RichTextEditor = () => {
   const [loading, setLoading] = useState(false);
   const [hasSlateValue, setHasSlateValue] = useState(false);
   const [slateValue, setSlateValue] = useState(initialValue);
-  const sendMessage = useMutation(mutation);
+  const sendMessage = useMutation(mutation, {
+    update: (cache, { data: { postCreate } }) => {
+      const { posts }: any = cache.readQuery({
+        query: PostsQuery
+      });
+      cache.writeQuery({
+        query: PostsQuery,
+        data: { posts: posts.concat([postCreate]) }
+      });
+    }
+  });
 
   const handleSlateValue = ({ value }: SlateEditorValue) => {
     setSlateValue(value);
@@ -139,9 +167,6 @@ const RichTextEditor = () => {
     <Card style={{ margin: 'auto', marginTop: '20px', width: '80%' }}>
       <CardHeader title={hasSlateValue && <h1>What did you do today ❓</h1>} />
       <CardContent>
-        {/* <Grid container spacing={8}>
-        <Icons icons={icons} />
-      </Grid> */}
         <Editor
           style={styles.editor}
           value={slateValue}

@@ -1,7 +1,15 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import gql from 'graphql-tag';
-import { useQuery } from 'react-apollo-hooks';
-import { Grid, CardContent, CardHeader, Card } from '@material-ui/core';
+import { useQuery, useApolloClient } from 'react-apollo-hooks';
+import {
+  Grid,
+  CardContent,
+  CardHeader,
+  Card,
+  ExpansionPanel,
+  ExpansionPanelSummary,
+  Typography
+} from '@material-ui/core';
 const query = gql`
   query Posts {
     posts {
@@ -17,30 +25,39 @@ const query = gql`
 
 const Posts = () => {
   const { data, loading } = useQuery(query);
+  // const [test] = useWatchQuery({ query });
+  // console.log(test);
   if (loading) return <h1> Loading... </h1>;
   const { posts } = data;
   return (
-    <Grid container style={{ margin: '10px' }} justify="center">
+    <div>
       {posts.map(post => (
-        <Grid key={post.id} item>
-          <Card>
-            <CardHeader
-              title={
-                <React.Fragment>
-                  <h3>{post.user.name}</h3>
-                  <p style={{ color: '#CCC', fontSize: '14px' }}>
-                    Id: {post.id}
-                  </p>
-                </React.Fragment>
-              }
+        <ExpansionPanel key={post.id}>
+          <ExpansionPanelSummary expandIcon={'🙏'}>
+            <Typography
+              style={{
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis'
+              }}
+            >
+              # {post.id} - {post.user.name}
+            </Typography>
+          </ExpansionPanelSummary>
+          <Typography>
+            <p
+              style={{
+                padding: 10,
+                whiteSpace: 'pre-wrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis'
+              }}
+              dangerouslySetInnerHTML={{ __html: post.body }}
             />
-            <CardContent>
-              <div dangerouslySetInnerHTML={{ __html: post.body }} />
-            </CardContent>
-          </Card>
-        </Grid>
+          </Typography>
+        </ExpansionPanel>
       ))}
-    </Grid>
+    </div>
   );
 };
 

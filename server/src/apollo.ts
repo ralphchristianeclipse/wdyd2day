@@ -3,7 +3,6 @@ import { importSchema } from 'graphql-import';
 import resolvers from './resolvers';
 import models from './models';
 
-console.log(models);
 const typeDefs = importSchema('schema.graphql');
 
 const apollo = new ApolloServer({
@@ -11,6 +10,16 @@ const apollo = new ApolloServer({
   resolvers,
   context: () => {
     return { models };
+  },
+  subscriptions: {
+    onConnect() {
+      console.log('HEY');
+      return { data: 'test' };
+    },
+    path: '/subscriptions'
+  },
+  playground: {
+    subscriptionEndpoint: '/subscriptions'
   }
 });
 
