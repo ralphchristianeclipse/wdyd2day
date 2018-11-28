@@ -19,15 +19,15 @@ const addPubSubToModel = (key: string, model: Model) => ({
     publishByType(key, 'CREATED', { ...data, ...result });
     return result;
   },
-  update: async data => {
-    const result = await model.create(data);
+  update: async (id, data) => {
+    const result = await model.update(id, data);
     publishByType(key, 'UPDATED', { ...data, ...result });
     return result;
   },
-  remove: async data => {
-    const result = await model.create(data);
-    publishByType(key, 'REMOVED', { ...data, ...result });
-    return result;
+  remove: async id => {
+    const result = await model.remove(id);
+    publishByType(key, 'REMOVED', { ...result });
+    return { id };
   }
 });
 

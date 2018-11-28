@@ -12,7 +12,7 @@ const Loading = () => <div>Loading...</div>;
 const Root = () => (
   <ApolloProvider client={client}>
     <ApolloHooksProvider client={client}>
-      <Suspense fallback={Loading}>
+      <Suspense fallback={<Loading />}>
         <App />
       </Suspense>
     </ApolloHooksProvider>

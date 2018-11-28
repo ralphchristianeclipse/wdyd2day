@@ -11,15 +11,12 @@ const apollo = new ApolloServer({
   context: () => {
     return { models };
   },
+  debug: true,
   subscriptions: {
     onConnect() {
       console.log('HEY');
       return { data: 'test' };
-    },
-    path: '/subscriptions'
-  },
-  playground: {
-    subscriptionEndpoint: '/subscriptions'
+    }
   }
 });
 

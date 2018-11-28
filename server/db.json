@@ -1,28 +1,3 @@
 {
-  "posts": [
-    {
-      "body": "asfas",
-      "id": 1
-    },
-    {
-      "body": "asfas23423",
-      "id": 2
-    },
-    {
-      "body": "qqqwrqw",
-      "id": 3
-    },
-    {
-      "body": "eeee",
-      "id": 4
-    },
-    {
-      "body": "dasdasdsdadasdasdasdsdadasdasdasdsdadasdasdasdsdadasdasdasdsdadasdasdasdsdadasdasdasdsdadasdasdasdsdadasdasdasdsdadas",
-      "id": 5
-    },
-    {
-      "body": "e",
-      "id": 6
-    }
-  ]
+  "posts": []
 }

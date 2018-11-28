@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 import { Editor, getEventRange, getEventTransfer } from 'slate-react';
 import { Value } from 'slate';
 import {
@@ -135,7 +135,7 @@ const RichTextEditor = () => {
       });
       cache.writeQuery({
         query: PostsQuery,
-        data: { posts: posts.concat([postCreate]) }
+        data: { posts: [postCreate, ...posts] }
       });
     }
   });
@@ -145,15 +145,19 @@ const RichTextEditor = () => {
   };
 
   const handleButtonClick = async () => {
+    const body = Plain.serialize(slateValue);
+    console.log(body);
+    if (!body || loading) return;
     setLoading(true);
     await sendMessage({
       variables: {
         data: {
-          body: Plain.serialize(slateValue)
+          body
         }
       }
     });
     setLoading(false);
+    slateValue.clear();
   };
 
   useEffect(
@@ -165,7 +169,7 @@ const RichTextEditor = () => {
 
   return (
     <Card style={{ margin: 'auto', marginTop: '20px', width: '80%' }}>
-      <CardHeader title={hasSlateValue && <h1>What did you do today ❓</h1>} />
+      <CardHeader title={hasSlateValue && <h1>What did you do today ?</h1>} />
       <CardContent>
         <Editor
           style={styles.editor}
@@ -182,11 +186,11 @@ const RichTextEditor = () => {
           onClick={handleButtonClick}
           disabled={loading}
         >
-          <h3> 📩 Send 🚀</h3>
+          <h3> ?? Send ?? </h3>
         </Button>
       </CardActions>
     </Card>
   );
 };
 
-export default RichTextEditor;
+export default memo(RichTextEditor);
